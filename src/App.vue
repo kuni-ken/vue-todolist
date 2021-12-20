@@ -1,64 +1,75 @@
 <template>
   <v-app>
-    <template>
-      <ToDoDialog
-        v-bind:show="showDialog"
-        v-bind:todo="todo"
-        v-on:doUpdate="doUpdate"
-        v-on:cancel="dialogClose"
-      />
-      <v-card
-        class="mx-auto"
-      >
-        <v-toolbar
-          color="cyan"
-          dark
+    <v-main>
+      <template>
+        <ToDoDialog
+          v-bind:show="showDialog"
+          v-bind:todo="todo"
+          v-on:doUpdate="doUpdate"
+          v-on:cancel="dialogClose"
+        />
+        <v-card
+          class="mx-auto"
+          tile
         >
-          <v-toolbar-title>ToDo一覧</v-toolbar-title>
-
-          <v-spacer></v-spacer>
-
-          <v-btn
-            fab
+          <v-toolbar
+            color="cyan"
             dark
-            color="indigo"
-            @click="onNewDialog"
           >
-            <v-icon dark>
-              mdi-plus
-            </v-icon>
-          </v-btn>
-        </v-toolbar>
-        <v-list three-line>
-          <template>
-            <v-list-item v-for="todo in todos" :key="todo.title">
-              <template>
-                <v-list-item-content>
-                  <v-list-item-title class="text-h5 mb-1">
-                    {{ todo.title }}
-                  </v-list-item-title>
-                  <v-list-item-subtitle class="text-h5 mb-1">
-                    {{ todo.detail }}
-                  </v-list-item-subtitle>
-                </v-list-item-content>
-                <v-list-item-action>
-                  <v-btn
-                    outlined
-                    rounded
-                    text
-                    @click="onShowDialog(todo.id)"
-                  >
-                    <v-icon>mdi-pencil-outline</v-icon>確認・変更
-                  </v-btn>
-                </v-list-item-action>
-              </template>
-            </v-list-item>
+            <v-toolbar-title>ToDo一覧</v-toolbar-title>
 
-          </template>
-        </v-list>
-      </v-card>
-      
-    </template>
+            <v-spacer></v-spacer>
+
+            <v-btn
+              fab
+              dark
+              color="indigo"
+              @click="onNewDialog"
+            >
+              <v-icon dark>
+                mdi-plus
+              </v-icon>
+            </v-btn>
+          </v-toolbar>
+          <v-list outlined>
+            <template>
+              <v-list-item v-for="todo in todos" :key="todo.title">
+                <template>
+                  <v-list-item-content>
+                    <v-list-item-title class="text-h5 mb-1">
+                      {{ todo.title }}
+                    </v-list-item-title>
+                    <v-list-item-subtitle class="text-h5 mb-1">
+                      {{ todo.detail }}
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                  <v-list-item-action>
+                    <v-btn
+                      outlined
+                      rounded
+                      text
+                      @click="onShowDialog(todo.id)"
+                    >
+                      <v-icon>mdi-pencil-outline</v-icon>確認・変更
+                    </v-btn>
+                    <v-btn
+                      outlined
+                      rounded
+                      text
+                      @click="removeItem(todo.id)"
+                    >
+                      <v-icon>mdi-pencil-outline</v-icon>削除
+                    </v-btn>
+                  </v-list-item-action>
+                </template>
+              </v-list-item>
+
+            </template>
+          </v-list>
+        </v-card>
+        
+      </template>
+    </v-main>
   </v-app>
 </template>
 
@@ -95,6 +106,9 @@ export default {
     onNewDialog(){
       this.todo = {};
       this.showDialog = true;
+    },
+    removeItem(id){
+      this.todos = this.todos.filter(el=>el.id!==id);
     }
   },
 
