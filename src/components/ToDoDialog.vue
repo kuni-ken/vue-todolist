@@ -69,6 +69,7 @@ export default {
   methods:{
     fix(){
       this.$emit('doUpdate', {
+        id: this.id,
         title: this.title,
         detail: this.detail
       })
@@ -79,6 +80,7 @@ export default {
   },
   data(){
     return {
+      id: -1,
       title: "",
       detail: ""
     }
@@ -88,6 +90,7 @@ export default {
     show(newShow){
       if (newShow){
         // 非表示から表示になったときに初期化する
+        this.id = this.todo.id;
         this.title = this.todo.title;
         this.detail = this.todo.detail;
       }

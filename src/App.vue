@@ -9,28 +9,55 @@
       />
       <v-card
         class="mx-auto"
-        max-width="344"
-        outlined
       >
-        <v-list-item three-line>
-          <v-list-item-content>
-            <v-list-item-title class="text-h5 mb-1">
-              {{ todo.title }} {{ todo.detail }}
-            </v-list-item-title>
-          </v-list-item-content>
-        </v-list-item>
+        <v-toolbar
+          color="cyan"
+          dark
+        >
+          <v-toolbar-title>ToDo一覧</v-toolbar-title>
 
-        <v-card-actions>
+          <v-spacer></v-spacer>
+
           <v-btn
-            outlined
-            rounded
-            text
-            @click="showDialog = true"
+            fab
+            dark
+            color="indigo"
+            @click="onNewDialog"
           >
-            確認・変更
+            <v-icon dark>
+              mdi-plus
+            </v-icon>
           </v-btn>
-        </v-card-actions>
+        </v-toolbar>
+        <v-list three-line>
+          <template>
+            <v-list-item v-for="todo in todos" :key="todo.title">
+              <template>
+                <v-list-item-content>
+                  <v-list-item-title class="text-h5 mb-1">
+                    {{ todo.title }}
+                  </v-list-item-title>
+                  <v-list-item-subtitle class="text-h5 mb-1">
+                    {{ todo.detail }}
+                  </v-list-item-subtitle>
+                </v-list-item-content>
+                <v-list-item-action>
+                  <v-btn
+                    outlined
+                    rounded
+                    text
+                    @click="onShowDialog(todo.id)"
+                  >
+                    <v-icon>mdi-pencil-outline</v-icon>確認・変更
+                  </v-btn>
+                </v-list-item-action>
+              </template>
+            </v-list-item>
+
+          </template>
+        </v-list>
       </v-card>
+      
     </template>
   </v-app>
 </template>
@@ -47,23 +74,39 @@ export default {
 
   methods: {
     doUpdate(todo){
-      Object.keys(this.todo).map((v) => {
-        this.todo[v] = todo[v];
-      })
+      if (!todo.id){
+        const time = new Date().getTime();
+        this.todos.push({...todo, id: time});
+      } else {
+        const target = this.todos.find(el=>el.id===todo.id);
+        Object.keys(target).map((v) => {
+          target[v] = todo[v];
+        })
+      }
       this.dialogClose();
     },
     dialogClose(){
       this.showDialog = false;
+    },
+    onShowDialog(id){
+      this.todo = this.todos.find(el=>el.id===id);
+      this.showDialog = true;
+    },
+    onNewDialog(){
+      this.todo = {};
+      this.showDialog = true;
     }
   },
 
   data(){
-   const todo = {
+   const todos = [{
+     id: 1,
      title: "鎌倉観光",
      detail: "鶴岡八幡宮\n→蕎麦屋\n→ジェラート屋\n→お土産屋"
-   } 
+   }]
    return {
-     todo,
+     todos,
+     todo: {},
      showDialog: false
    }
   },
